@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: rentdeck
+      POSTGRES_PASSWORD: rentdeck123
+      POSTGRES_DB: rentdeck
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "4541:4541"
+    environment:
+      DATABASE_URL: postgresql://rentdeck:rentdeck123@postgres:5432/rentdeck?schema=public
+      JWT_SECRET: rentdeck-dev-secret
+      FRONTEND_URL: http://localhost:3541
+      PORT: 4541
+    depends_on:
+      - postgres
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3541:3541"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4541/api
+
+volumes:
+  pgdata:

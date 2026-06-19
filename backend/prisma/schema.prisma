@@ -1,0 +1,188 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RentShop {
+  id        String   @id @default(uuid())
+  name      String
+  address   String   @default("")
+  city      String   @default("")
+  region    String   @default("")
+  phone     String   @default("")
+  email     String   @default("")
+  season    String   @default("winter")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users           User[]
+  renters         Renter[]
+  equipment       Equipment[]
+  rentalPackages  RentalPackage[]
+  rentals         Rental[]
+  tuneJobs        TuneJob[]
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole @default(counter_staff)
+  specialty    String   @default("")
+  shopId       String
+  shop         RentShop @relation(fields: [shopId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum UserRole {
+  admin
+  counter_staff
+  technician
+  manager
+}
+
+model Renter {
+  id         String   @id @default(uuid())
+  fullName   String
+  phone      String
+  email      String   @default("")
+  bootSize   String   @default("")
+  skillLevel String   @default("intermediate")
+  notes      String   @default("")
+  shopId     String
+  shop       RentShop @relation(fields: [shopId], references: [id])
+  rentals    Rental[]
+  tuneJobs   TuneJob[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum EquipmentType {
+  ski
+  snowboard
+  boots
+  helmet
+  poles
+  bindings
+}
+
+enum EquipmentCondition {
+  excellent
+  good
+  fair
+  needs_service
+}
+
+enum EquipmentStatus {
+  available
+  rented
+  maintenance
+  retired
+}
+
+model Equipment {
+  id        String             @id @default(uuid())
+  name      String
+  type      EquipmentType      @default(ski)
+  brand     String             @default("")
+  size      String             @default("")
+  condition EquipmentCondition @default(good)
+  status    EquipmentStatus    @default(available)
+  dailyRate Float              @default(0)
+  notes     String             @default("")
+  shopId    String
+  shop      RentShop           @relation(fields: [shopId], references: [id])
+  rentals   Rental[]
+  tuneJobs  TuneJob[]
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+}
+
+enum PackageDuration {
+  half_day
+  full_day
+  two_day
+  week
+  season
+}
+
+model RentalPackage {
+  id            String          @id @default(uuid())
+  name          String
+  duration      PackageDuration @default(full_day)
+  price         Float           @default(0)
+  depositAmount Float           @default(0)
+  description   String          @default("")
+  shopId        String
+  shop          RentShop        @relation(fields: [shopId], references: [id])
+  rentals       Rental[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+enum RentalStatus {
+  reserved
+  active
+  overdue
+  returned
+  cancelled
+}
+
+model Rental {
+  id          String        @id @default(uuid())
+  startDate   DateTime
+  endDate     DateTime?
+  status      RentalStatus  @default(active)
+  totalPrice  Float         @default(0)
+  depositPaid Float         @default(0)
+  notes       String        @default("")
+  renterId    String
+  renter      Renter        @relation(fields: [renterId], references: [id])
+  equipmentId String?
+  equipment   Equipment?    @relation(fields: [equipmentId], references: [id])
+  packageId   String?
+  package     RentalPackage? @relation(fields: [packageId], references: [id])
+  shopId      String
+  shop        RentShop      @relation(fields: [shopId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum TuneJobType {
+  wax
+  edge_tune
+  binding_mount
+  full_tune
+  repair
+}
+
+enum TuneJobStatus {
+  scheduled
+  in_progress
+  completed
+  cancelled
+}
+
+model TuneJob {
+  id          String        @id @default(uuid())
+  scheduledAt DateTime
+  type        TuneJobType   @default(wax)
+  status      TuneJobStatus @default(scheduled)
+  technician  String        @default("")
+  notes       String        @default("")
+  renterId    String
+  renter      Renter        @relation(fields: [renterId], references: [id])
+  equipmentId String?
+  equipment   Equipment?    @relation(fields: [equipmentId], references: [id])
+  shopId      String
+  shop        RentShop      @relation(fields: [shopId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}

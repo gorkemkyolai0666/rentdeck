@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --glacier: #e8f4fc;
+  --glacier-dark: #b8d4e8;
+  --slate-deep: #0f172a;
+  --slate-mid: #1e293b;
+  --frost: #f0f9ff;
+  --ice-blue: #38bdf8;
+  --ice-blue-dark: #0284c7;
+  --alpine-green: #059669;
+  --sunset-orange: #f97316;
+  --danger: #ef4444;
+  --warning: #eab308;
+  --success: #10b981;
+  --info: #6366f1;
+
+  --bg-primary: var(--frost);
+  --bg-secondary: #ffffff;
+  --bg-nav: var(--slate-deep);
+  --text-primary: var(--slate-deep);
+  --text-muted: #64748b;
+  --text-nav: var(--glacier);
+  --text-nav-muted: #94a3b8;
+  --border-color: #cbd5e1;
+  --accent: var(--ice-blue-dark);
+  --glass: rgba(255, 255, 255, 0.7);
+}
+
+.dark {
+  --bg-primary: #0c1222;
+  --bg-secondary: #151d2e;
+  --bg-nav: #070b14;
+  --text-primary: var(--glacier);
+  --text-muted: #94a3b8;
+  --text-nav: var(--glacier);
+  --text-nav-muted: #64748b;
+  --border-color: #334155;
+  --accent: var(--ice-blue);
+  --glass: rgba(15, 23, 42, 0.8);
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Outfit', system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+}
+
+.stat-card {
+  @apply rounded-2xl p-4 flex flex-col gap-1 backdrop-blur-sm;
+  background: var(--glass);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 24px rgba(2, 132, 199, 0.06);
+}
+
+.badge-success { @apply px-2 py-0.5 rounded-full text-xs font-medium; background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.badge-warning { @apply px-2 py-0.5 rounded-full text-xs font-medium; background: rgba(234, 179, 8, 0.15); color: var(--warning); }
+.badge-danger { @apply px-2 py-0.5 rounded-full text-xs font-medium; background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+.badge-info { @apply px-2 py-0.5 rounded-full text-xs font-medium; background: rgba(99, 102, 241, 0.15); color: var(--info); }
+.badge-gold { @apply px-2 py-0.5 rounded-full text-xs font-medium; background: rgba(2, 132, 199, 0.15); color: var(--ice-blue-dark); }
+
+.btn-primary {
+  @apply px-4 py-2.5 rounded-xl font-medium transition-all;
+  background: linear-gradient(135deg, var(--ice-blue-dark), var(--ice-blue));
+  color: white;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4); }
+.btn-primary:disabled { opacity: 0.6; transform: none; cursor: not-allowed; }
+
+.input-field {
+  @apply w-full px-3 py-2.5 rounded-xl text-sm outline-none transition-all;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+.input-field:focus { border-color: var(--ice-blue); box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15); }
+
+.card {
+  @apply rounded-2xl p-5 backdrop-blur-sm;
+  background: var(--glass);
+  border: 1px solid var(--border-color);
+}
+
+.alpine-gradient {
+  background: linear-gradient(135deg, var(--slate-deep) 0%, #1e3a5f 50%, var(--ice-blue-dark) 100%);
+}
